@@ -1,0 +1,74 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title></title>
+  
+
+  <link rel="stylesheet" href="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+	<link href="style/ekko-lightbox.css" rel="stylesheet">
+
+
+  <!--[if lt IE 9]>
+  <![endif]-->
+</head>
+
+<body style="background:none;">
+	 <!-- <p>
+	 	<a href="http://www.youtube.com/watch?v=k6mFF3VmVAs" data-toggle="lightbox">Ghostpoet - Cash and Carry Me Home</a>
+	 </p> -->
+	<script src="//code.jquery.com/jquery.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="js/ekko-lightbox.js"></script>
+    <script type="text/javascript">
+    	$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+		    event.preventDefault();
+		    $(this).ekkoLightbox();
+		});
+    </script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript">
+    	amroManager = {};
+    	amroManager.utils = amroUtils;
+    	amroManager.frameId = amroManager.utils.urlParamsJson["frameId"];
+		amroManager.consts = {};
+		amroManager.consts.COMMON_HOST = "http://chrome.dealply.com/amit/";
+		amroManager.consts.UTILS_SCRIPT_URL = amroManager.consts.COMMON_HOST + "js/utils.js";
+		amroManager.consts.IFRAME_SRC_URL = amroManager.consts.COMMON_HOST + "test.html";
+		amroManager.consts.VIDEO_COMMON_URL = amroManager.consts.COMMON_HOST +  "video.html?#video=";
+		amroManager.consts.SON_PREFIX = "amro_son";
+
+		amroManager.sendMessage = function(message){
+			parent.postMessage(amroManager.consts.SON_PREFIX + message, "*");
+		};
+
+		amroManager.closeSelf = function(){
+			amroManager.sendMessage("amroManager.removeFrame('"+ amroManager.frameId +"')");
+		};
+
+    	amroManager.player = (function(id){
+    		var a = $('<a href="http://www.youtube.com/watch?v='+ id +'" data-toggle="lightbox" style="display:none;" + data-width="640" />')[0]; 
+    		document.body.appendChild(a); 
+    		var player = $(a);
+    		player.play = $(a).click;
+    		return player;
+    	})(amroUtils.urlParamsJson["video"]);
+    	
+
+    	amroManager.player.play();
+
+    	document.onclick = function(e){
+    		console.log(e);
+    		amroManager.closeSelf();
+
+    	};
+
+
+    </script>
+</body>
+</html>

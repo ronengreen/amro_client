@@ -1,12 +1,19 @@
 
 require 'webrick'
-require 'curb'
+
+
 
 def test_put ip="0.0.0.0"
   time_str = Time.now.utc.iso8601.to_s
-  curl = Curl.put('search-test-am6bb6mpqcj7mrpf7dmdyvtn2q.us-west-2.es.amazonaws.com/test/ronen/'+Time.now.to_f.to_s.gsub(/\./,""),
-                  '{"eventTime":"2016-07-11T18:29:28Z","@timestamp":"'+ time_str +'","desc":"ronen noga bka bla" ,"ip":"'+ip+'"}')
-  curl.body_str
+  port = 80
+  host = 'search-test-am6bb6mpqcj7mrpf7dmdyvtn2q.us-west-2.es.amazonaws.com'
+  path = '/test/ronen/'+Time.now.to_f.to_s.gsub(/\./,"")+"/"
+
+  req = Net::HTTP::Put.new(path, initheader = { 'Content-Type' => 'text/plain'})
+  req.body = '{"eventTime":"2016-07-11T18:29:28Z","@timestamp":"'+ time_str +'","desc":"ronen noga bka bla" ,"ip":"'+ip+'"}'
+  response = Net::HTTP.new(host, port).start {|http| http.request(req) }
+  response.to_s
+
 end
 
 class Simple < WEBrick::HTTPServlet::AbstractServlet
@@ -19,8 +26,13 @@ class Simple < WEBrick::HTTPServlet::AbstractServlet
   end
 end
 
+
+require 'net/http'
+
+
+
 root = File.expand_path '.'
-server = WEBrick::HTTPServer.new :Port => 8001, :DocumentRoot => root
+server = WEBrick::HTTPServer.new :Port => 80, :DocumentRoot => root
 trap 'INT' do server.shutdown end
 server.mount '/simple', Simple
 server.start
